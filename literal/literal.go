@@ -18,3 +18,8 @@ func (l *Literal) Print() string {
 func (l *Literal) Negation() Literal {
 	return Literal{Name: l.Name, Negated: !l.Negated}
 }
+
+//Equals compares two Literals by their output strings
+func Equals(a, b Literal) bool {
+	return a.Print() == b.Print()
+}
