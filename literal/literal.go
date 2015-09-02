@@ -1,6 +1,6 @@
 package literal
 
-//Literal is a literal
+//Literal is a container class for a name and negation of a literal -- ex. A, ~A
 type Literal struct {
 	Name    string
 	Negated bool
