@@ -22,7 +22,7 @@ func TestEquality(t *testing.T) {
 		equals := Equals(a, b)
 
 		if equals != c.want {
-			t.Errorf("Equals(%q, %q) == %t, want %t", a.Print(), b.Print(), equals, c.want)
+			t.Errorf("Equals(%q, %q) == %t, want %t", a.String(), b.String(), equals, c.want)
 		}
 	}
 }

@@ -13,7 +13,7 @@ func TestPrint(t *testing.T) {
 	}
 	for _, c := range cases {
 		l := Literal{Name: c.inName, Negated: c.inNegated}
-		got := l.Print()
+		got := l.String()
 		if got != c.want {
 			t.Errorf("Print(%q, %t) == %q, want %q", c.inName, c.inNegated, got, c.want)
 		}

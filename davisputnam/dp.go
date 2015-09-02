@@ -14,5 +14,7 @@ func main() {
 	c.Append(l)
 	c.Append(m)
 
-	fmt.Println(c.Print())
+	fmt.Println(l)
+	fmt.Println(m)
+	fmt.Println(c)
 }

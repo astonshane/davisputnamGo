@@ -11,11 +11,10 @@ type Clause struct {
 	clause []literal.Literal
 }
 
-//Print returns the string representation of the clause
-func (c *Clause) Print() string {
+func (c Clause) String() string {
 	ret := "{"
 	for _, lit := range c.clause {
-		ret = ret + fmt.Sprint(lit.Print()) + ", "
+		ret = ret + fmt.Sprint(lit.String()) + ", "
 	}
 	ret = strings.Trim(ret, ", ")
 	ret = ret + "}"
@@ -25,19 +24,4 @@ func (c *Clause) Print() string {
 //Append adds a literal to the clause
 func (c *Clause) Append(l literal.Literal) {
 	c.clause = append(c.clause, l)
-}
-
-func main() {
-	l := literal.Literal{Name: "A", Negated: false}
-	m := literal.Literal{Name: "B", Negated: true}
-
-	c := Clause{}
-
-	fmt.Println(c.Print())
-
-	c.Append(l)
-	c.Append(m)
-
-	fmt.Println(c.Print())
-
 }

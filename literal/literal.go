@@ -6,8 +6,7 @@ type Literal struct {
 	Negated bool
 }
 
-//Print returns a string that represents the literal with ~ for a negation
-func (l *Literal) Print() string {
+func (l Literal) String() string {
 	if l.Negated {
 		return "~" + l.Name
 	}
@@ -21,5 +20,5 @@ func (l *Literal) Negation() Literal {
 
 //Equals compares two Literals by their output strings
 func Equals(a, b Literal) bool {
-	return a.Print() == b.Print()
+	return a.String() == b.String()
 }
