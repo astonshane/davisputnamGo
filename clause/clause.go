@@ -18,12 +18,24 @@ type Clause struct {
 func (c *Clause) Append(l literal.Literal) {
 	//don't add the literal if it is already in the clause
 	for _, lit := range c.clause {
-		if literal.Equals(l, lit) {
+		if l == lit {
 			return
 		}
 	}
 	c.clause = append(c.clause, l)
 	sort.Sort(c.clause)
+}
+
+//Remove removes the given literal from the clause set
+//returns same clause if l not in Clause
+func (c *Clause) Remove(l literal.Literal) {
+	newClause := literals{}
+	for _, lit := range c.clause {
+		if l != lit {
+			newClause = append(newClause, lit)
+		}
+	}
+	c.clause = newClause
 }
 
 func (c Clause) String() string {
@@ -36,6 +48,7 @@ func (c Clause) String() string {
 	return ret
 }
 
+//functions needed to define the Sort interface for type literals ([]literal.Literal)
 func (c literals) Len() int {
 	return len(c)
 }
