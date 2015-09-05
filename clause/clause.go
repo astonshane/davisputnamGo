@@ -49,6 +49,19 @@ func (c *Clause) RemoveIndex(i int) {
 	}
 }
 
+//Equals compares the equality of two clauses
+func Equals(a, b Clause) bool {
+	if len(a.clause) != len(b.clause) {
+		return false
+	}
+	for i := 0; i < len(a.clause); i++ {
+		if a.clause[i] != b.clause[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func (c Clause) String() string {
 	ret := "{"
 	for _, lit := range c.clause {
