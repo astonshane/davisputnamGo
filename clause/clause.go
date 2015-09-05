@@ -27,7 +27,6 @@ func (c *Clause) Append(l literal.Literal) {
 }
 
 //Remove removes the given literal from the clause set
-//returns same clause if l not in Clause
 func (c *Clause) Remove(l literal.Literal) {
 	newClause := literals{}
 	for _, lit := range c.clause {
@@ -36,6 +35,18 @@ func (c *Clause) Remove(l literal.Literal) {
 		}
 	}
 	c.clause = newClause
+}
+
+//RemoveIndex removes the literal at index i
+func (c *Clause) RemoveIndex(i int) {
+	if i < len(c.clause) {
+		a := c.clause[:i]
+		b := c.clause[i+1:]
+		for _, lit := range b {
+			a = append(a, lit)
+		}
+		c.clause = a
+	}
 }
 
 func (c Clause) String() string {
