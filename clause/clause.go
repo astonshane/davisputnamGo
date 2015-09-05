@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-type literals []literal.Literal
+type literalSlice []literal.Literal
 
-//Clause is a set of Literals -- ex. {A, ~B, C}, {~A}
+//Clause is a slice of Literals -- ex. {A, ~B, C}, {~A}
 type Clause struct {
-	clause literals
+	clause literalSlice
 }
 
 //Append adds a literal to the clause
@@ -28,7 +28,7 @@ func (c *Clause) Append(l literal.Literal) {
 
 //Remove removes the given literal from the clause set
 func (c *Clause) Remove(l literal.Literal) {
-	newClause := literals{}
+	newClause := literalSlice{}
 	for _, lit := range c.clause {
 		if l != lit {
 			newClause = append(newClause, lit)
@@ -59,14 +59,19 @@ func (c Clause) String() string {
 	return ret
 }
 
-//functions needed to define the Sort interface for type literals ([]literal.Literal)
-func (c literals) Len() int {
+//Len returns the length of the clause (ie. how many literals it contains)
+func Len(c Clause) int {
+	return len(c.clause)
+}
+
+//functions needed to define the Sort interface for type literalSlice ([]literal.Literal)
+func (c literalSlice) Len() int {
 	return len(c)
 }
-func (c literals) Swap(i, j int) {
+func (c literalSlice) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
-func (c literals) Less(i, j int) bool {
+func (c literalSlice) Less(i, j int) bool {
 	if c[i].Name < c[j].Name {
 		return true
 	} else if c[i].Name > c[j].Name {
