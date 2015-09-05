@@ -5,15 +5,8 @@ import (
 	"testing"
 )
 
-func constructLiterals() (literal.Literal, literal.Literal, literal.Literal) {
-	a := literal.Literal{Name: "A", Negated: false}
-	b := literal.Literal{Name: "B", Negated: true}
-	c := literal.Literal{Name: "C", Negated: true}
-	return a, b, c
-}
-
 func TestPrint(t *testing.T) {
-	a, b, c := constructLiterals()
+	a, b, nb := literal.ConstructTestLiterals()
 
 	//case1 -- empty clause
 	c1 := Clause{}
@@ -37,18 +30,18 @@ func TestPrint(t *testing.T) {
 	c3.Append(b)
 	c3.Append(a)
 	got = c3.String()
-	want = "{A, ~B}"
+	want = "{A, B}"
 	if got != want {
 		t.Errorf("String() == %q, want %q", got, want)
 	}
 
 	//case 4 -- 3 things
 	c4 := Clause{}
-	c4.Append(a)
+	c4.Append(nb)
 	c4.Append(b)
-	c4.Append(c)
+	c4.Append(a)
 	got = c4.String()
-	want = "{A, ~B, ~C}"
+	want = "{A, B, ~B}"
 	if got != want {
 		t.Errorf("String() == %q, want %q", got, want)
 	}

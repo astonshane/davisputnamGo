@@ -5,15 +5,8 @@ import (
 	"testing"
 )
 
-func constructLiterals2() (literal.Literal, literal.Literal, literal.Literal) {
-	a := literal.Literal{Name: "A", Negated: false}
-	b := literal.Literal{Name: "B", Negated: false}
-	nb := literal.Literal{Name: "B", Negated: true}
-	return a, b, nb
-}
-
 func TestAppend(t *testing.T) {
-	a, b, nb := constructLiterals2()
+	a, b, nb := literal.ConstructTestLiterals()
 
 	//case0 -- 1 literal
 	c0 := Clause{}

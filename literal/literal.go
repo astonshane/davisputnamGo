@@ -22,3 +22,11 @@ func (l *Literal) Negation() Literal {
 func Equals(a, b Literal) bool {
 	return a.String() == b.String()
 }
+
+//ConstructTestLiterals used by the tests
+func ConstructTestLiterals() (Literal, Literal, Literal) {
+	a := Literal{Name: "A", Negated: false}
+	b := Literal{Name: "B", Negated: false}
+	nb := Literal{Name: "B", Negated: true}
+	return a, b, nb
+}

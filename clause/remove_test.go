@@ -5,15 +5,8 @@ import (
 	"testing"
 )
 
-func constructLiterals3() (literal.Literal, literal.Literal, literal.Literal) {
-	a := literal.Literal{Name: "A", Negated: false}
-	b := literal.Literal{Name: "B", Negated: false}
-	nb := literal.Literal{Name: "B", Negated: true}
-	return a, b, nb
-}
-
 func TestRemove(t *testing.T) {
-	a, b, nb := constructLiterals3()
+	a, b, nb := literal.ConstructTestLiterals()
 
 	//case0 -- remove from empty clause
 	clause := Clause{}

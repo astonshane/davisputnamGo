@@ -79,5 +79,4 @@ func (c literals) Less(i, j int) bool {
 		}
 		return false
 	}
-	//return c.clause[i] < c.clause[j]
 }
