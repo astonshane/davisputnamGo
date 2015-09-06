@@ -49,6 +49,17 @@ func (c *Clause) RemoveIndex(i int) {
 	}
 }
 
+//Contains returns the index of the Clause that contains the literal (-1 else)
+func (c *Clause) Contains(literal literal.Literal) int {
+	for i, l := range c.Clause {
+		if l == literal {
+			return i
+		}
+	}
+
+	return -1
+}
+
 //Equals compares the equality of two clauses
 func Equals(a, b Clause) bool {
 	if len(a.Clause) != len(b.Clause) {
