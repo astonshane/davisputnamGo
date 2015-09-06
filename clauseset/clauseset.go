@@ -25,6 +25,29 @@ func (c *ClauseSet) Append(a clause.Clause) {
 	sort.Sort(c.clauses)
 }
 
+//Reduce transforms S by removing any clauses that contain the literal L1
+//   and removing L2 (i.e. ~L1) from any clauses that contain it
+func (c *ClauseSet) Reduce(l1 literal.Literal) {
+	l2 := l1.Negation()
+
+	newClauseSet := ClauseSet{}
+
+	for _, clause := range c.clauses {
+		i := clause.Contains(l1)
+		if i != -1 {
+			continue
+		}
+
+		j := clause.Contains(l2)
+		if j != -1 {
+			clause.RemoveIndex(j)
+		}
+		newClauseSet.Append(clause)
+
+	}
+	c.clauses = newClauseSet.clauses
+}
+
 func (c ClauseSet) String() string {
 	ret := "{"
 	for _, clause := range c.clauses {
