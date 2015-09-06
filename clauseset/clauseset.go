@@ -3,6 +3,7 @@ package clauseset
 import (
 	"davisputnam/clause"
 	"sort"
+	"strings"
 )
 
 type clauseSlice []clause.Clause
@@ -13,11 +14,24 @@ type ClauseSet struct {
 }
 
 //Append adds a clause to the ClauseSet
-func (c *ClauseSet) Append(cl clause.Clause) {
-	//modify to check for duplicates (ala clause.Append())
-	//add tests
-	c.clauses = append(c.clauses, cl)
+func (c *ClauseSet) Append(a clause.Clause) {
+	for _, b := range c.clauses {
+		if clause.Equals(a, b) {
+			return
+		}
+	}
+	c.clauses = append(c.clauses, a)
 	sort.Sort(c.clauses)
+}
+
+func (c ClauseSet) String() string {
+	ret := "{"
+	for _, clause := range c.clauses {
+		ret = ret + clause.String() + ", "
+	}
+	ret = strings.Trim(ret, ", ")
+	ret = ret + "}"
+	return ret
 }
 
 //functions needed to define the Sort interface for type clauseSlice([]clause.Clause)
