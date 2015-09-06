@@ -98,3 +98,25 @@ func (c literalSlice) Less(i, j int) bool {
 		return false
 	}
 }
+
+//ConstructTestClauses used by the tests
+func ConstructTestClauses() (Clause, Clause, Clause, Clause) {
+	a, b, nb := literal.ConstructTestLiterals()
+
+	empty := Clause{}
+
+	one := Clause{}
+	one.Append(a)
+
+	two := Clause{}
+	two.Append(a)
+	two.Append(b)
+
+	three := Clause{}
+	three.Append(a)
+	three.Append(b)
+	three.Append(nb)
+
+	return empty, one, two, three
+
+}
