@@ -11,51 +11,51 @@ type literalSlice []literal.Literal
 
 //Clause is a slice of Literals -- ex. {A, ~B, C}, {~A}
 type Clause struct {
-	clause literalSlice
+	Clause literalSlice
 }
 
 //Append adds a literal to the clause
 func (c *Clause) Append(l literal.Literal) {
 	//don't add the literal if it is already in the clause
-	for _, lit := range c.clause {
+	for _, lit := range c.Clause {
 		if l == lit {
 			return
 		}
 	}
-	c.clause = append(c.clause, l)
-	sort.Sort(c.clause)
+	c.Clause = append(c.Clause, l)
+	sort.Sort(c.Clause)
 }
 
 //Remove removes the given literal from the clause set
 func (c *Clause) Remove(l literal.Literal) {
 	newClause := literalSlice{}
-	for _, lit := range c.clause {
+	for _, lit := range c.Clause {
 		if l != lit {
 			newClause = append(newClause, lit)
 		}
 	}
-	c.clause = newClause
+	c.Clause = newClause
 }
 
 //RemoveIndex removes the literal at index i
 func (c *Clause) RemoveIndex(i int) {
-	if i < len(c.clause) {
-		a := c.clause[:i]
-		b := c.clause[i+1:]
+	if i < len(c.Clause) {
+		a := c.Clause[:i]
+		b := c.Clause[i+1:]
 		for _, lit := range b {
 			a = append(a, lit)
 		}
-		c.clause = a
+		c.Clause = a
 	}
 }
 
 //Equals compares the equality of two clauses
 func Equals(a, b Clause) bool {
-	if len(a.clause) != len(b.clause) {
+	if len(a.Clause) != len(b.Clause) {
 		return false
 	}
-	for i := 0; i < len(a.clause); i++ {
-		if a.clause[i] != b.clause[i] {
+	for i := 0; i < len(a.Clause); i++ {
+		if a.Clause[i] != b.Clause[i] {
 			return false
 		}
 	}
@@ -64,7 +64,7 @@ func Equals(a, b Clause) bool {
 
 func (c Clause) String() string {
 	ret := "{"
-	for _, lit := range c.clause {
+	for _, lit := range c.Clause {
 		ret = ret + fmt.Sprint(lit.String()) + ", "
 	}
 	ret = strings.Trim(ret, ", ")
@@ -74,7 +74,7 @@ func (c Clause) String() string {
 
 //Len returns the length of the clause (ie. how many literals it contains)
 func Len(c Clause) int {
-	return len(c.clause)
+	return len(c.Clause)
 }
 
 //functions needed to define the Sort interface for type literalSlice ([]literal.Literal)

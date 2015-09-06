@@ -2,6 +2,7 @@ package clauseset
 
 import (
 	"davisputnam/clause"
+	"davisputnam/literal"
 	"sort"
 	"strings"
 )
@@ -42,5 +43,20 @@ func (c clauseSlice) Swap(i, j int) {
 	c[i], c[j] = c[j], c[i]
 }
 func (c clauseSlice) Less(i, j int) bool {
-	return clause.Len(c[i]) < clause.Len(c[j])
+	//if they aren't the same length, put the shorter one first
+	if clause.Len(c[i]) != clause.Len(c[j]) {
+		return clause.Len(c[i]) < clause.Len(c[j])
+	}
+
+	//they must both be the same size now...
+	for x := 0; x < clause.Len(c[i]); x++ {
+		//literal x is not the same
+		if c[i].Clause[x] != c[j].Clause[x] {
+			//return the lesser one
+			return literal.Less(c[i].Clause[x], c[j].Clause[x])
+		}
+	}
+
+	return false
+
 }

@@ -23,7 +23,22 @@ func Equals(a, b Literal) bool {
 	return a.String() == b.String()
 }
 
-//ConstructTestLiterals used by the tests
+//Less compares two literals, returns the "lower one" -- A < B;  A < ~A; A < ~B; A !< A
+func Less(a, b Literal) bool {
+	if a.Name == b.Name {
+		//same name
+		if a.Negated == b.Negated {
+			//same negation too
+			return false
+		}
+		//if a is not negated, it should be Less
+		return !a.Negated
+	}
+	//different name, return a<b by name
+	return a.Name < b.Name
+}
+
+//ConstructTestLiterals used by tests
 func ConstructTestLiterals() (Literal, Literal, Literal) {
 	a := Literal{Name: "A", Negated: false}
 	b := Literal{Name: "B", Negated: false}
