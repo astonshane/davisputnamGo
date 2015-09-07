@@ -73,6 +73,16 @@ func Equals(a, b Clause) bool {
 	return true
 }
 
+//Copy returns a copy of Clause
+func (c Clause) Copy() Clause {
+	newClause := Clause{}
+
+	for _, lit := range c.Clause {
+		newClause.Append(lit.Copy())
+	}
+	return newClause
+}
+
 func (c Clause) String() string {
 	ret := "{"
 	for _, lit := range c.Clause {
