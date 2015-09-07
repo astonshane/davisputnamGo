@@ -64,6 +64,24 @@ func (c ClauseSet) FirstElement() (clause.Clause, error) {
 	return clause.Clause{}, errors.New("No first element in empty ClauseSet")
 }
 
+//Equals returns the equality of two ClauseSets
+func Equals(a, b ClauseSet) bool {
+	if a.Len() != b.Len() {
+		return false
+	}
+	for i := 0; i < a.Len(); i++ {
+		if !clause.Equals(a.clauses[i], b.clauses[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+//Len returns the length of the ClauseSet (ie. how many clauses it contains)
+func Len(c ClauseSet) int {
+	return len(c.clauses)
+}
+
 //Copy copies the contesnts of ClauseSet
 func (c ClauseSet) Copy() ClauseSet {
 	newClauseSet := ClauseSet{}
