@@ -39,10 +39,14 @@ func TestReduce(t *testing.T) {
 		before := cs.String() //{{A}, {~A}, {A, B}, {A, ~B}}
 
 		new := cs.Reduce(c.lit)
+		post := cs.String()
 		got := new.String()
 
 		if got != c.want {
 			t.Errorf("%q.Reduce(%q) == %q, want %q", before, c.lit, got, c.want)
+		}
+		if before != post {
+			t.Errorf("before (%q) != post (%q); cs changed", before, post)
 		}
 	}
 }

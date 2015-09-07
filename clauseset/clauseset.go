@@ -15,6 +15,11 @@ type ClauseSet struct {
 	clauses clauseSlice
 }
 
+/*func (c ClauseSet) Copy() ClauseSet {
+	new_clasuseset := c.clauses
+	return new_clasuseset
+}*/
+
 //Append adds a clause to the ClauseSet
 func (c *ClauseSet) Append(a clause.Clause) {
 	for _, b := range c.clauses {
@@ -29,11 +34,12 @@ func (c *ClauseSet) Append(a clause.Clause) {
 //Reduce transforms S by removing any clauses that contain the literal L1
 //   and removing L2 (i.e. ~L1) from any clauses that contain it
 func (c ClauseSet) Reduce(l1 literal.Literal) ClauseSet {
+	cs := c.Copy()
 	l2 := l1.Negation()
 
 	newClauseSet := ClauseSet{}
 
-	for _, clause := range c.clauses {
+	for _, clause := range cs.clauses {
 		i := clause.Contains(l1)
 		if i != -1 {
 			continue
@@ -56,6 +62,16 @@ func (c ClauseSet) FirstElement() (clause.Clause, error) {
 	}
 	//return empty clause up
 	return clause.Clause{}, errors.New("No first element in empty ClauseSet")
+}
+
+//Copy copies the contesnts of ClauseSet
+func (c ClauseSet) Copy() ClauseSet {
+	newClauseSet := ClauseSet{}
+
+	for _, cl := range c.clauses {
+		newClauseSet.Append(cl.Copy())
+	}
+	return newClauseSet
 }
 
 func (c ClauseSet) String() string {
