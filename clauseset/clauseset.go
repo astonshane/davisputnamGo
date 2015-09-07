@@ -58,6 +58,11 @@ func (c ClauseSet) String() string {
 	return ret
 }
 
+//Len returns the length of the ClauseSet
+func (c ClauseSet) Len() int {
+	return len(c.clauses)
+}
+
 //functions needed to define the Sort interface for type clauseSlice([]clause.Clause)
 func (c clauseSlice) Len() int {
 	return len(c)
