@@ -2,23 +2,50 @@ package main
 
 import (
 	"davisputnam/clause"
+	"davisputnam/clauseset"
 	"davisputnam/literal"
 	"fmt"
+	"log"
 )
 
 /*
-def Satisfiable(s):
-    if S = {}:
+def Satisfiable(CS):
+    if CS = {}:
         return true
-    if S = {{}}:
+    if {} in CS:
         return false
-    if {} in S:
-        return false
-    if {L} in S:
-        return Satisfiable(S_L)
-    select L in lit(s)
-        return Satisfiable(S_L) | Satisfiable(S_L')
+    if {L} in CS:
+        return Satisfiable(CS_L)
+    select L in lit(CS)
+        return Satisfiable(CS_L) | Satisfiable(CS_L')
 */
+
+//Satisfiable implements above function
+func Satisfiable(CS clauseset.ClauseSet) bool {
+	//if CS = {} : return true
+	if CS.Len() == 0 {
+		return true
+	}
+
+	//if {} in CS : return false
+	firstElement, err := CS.FirstElement()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if clause.Len(firstElement) == 0 {
+		return false
+	}
+
+	//select L in lit(CS): return Satisfiable(CS_L) || Satisfiable(CS_L')
+	nextLiteral, err2 := CS.NextLiteral()
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	CSL := CS.Reduce(nextLiteral)
+	CSR := CS.Reduce(nextLiteral.Negation())
+
+	return Satisfiable(CSL) || Satisfiable(CSR)
+}
 
 func main() {
 	l := literal.Literal{Name: "A", Negated: false}
