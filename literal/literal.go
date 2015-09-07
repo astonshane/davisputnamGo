@@ -13,6 +13,11 @@ func (l Literal) String() string {
 	return l.Name
 }
 
+//Copy returns a copy of the literal
+func (l Literal) Copy() Literal {
+	return Literal{l.Name, l.Negated}
+}
+
 //Negation returns the negated literal
 func (l *Literal) Negation() Literal {
 	return Literal{Name: l.Name, Negated: !l.Negated}

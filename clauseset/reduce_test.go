@@ -38,8 +38,8 @@ func TestReduce(t *testing.T) {
 
 		before := cs.String() //{{A}, {~A}, {A, B}, {A, ~B}}
 
-		cs.Reduce(c.lit)
-		got := cs.String()
+		new := cs.Reduce(c.lit)
+		got := new.String()
 
 		if got != c.want {
 			t.Errorf("%q.Reduce(%q) == %q, want %q", before, c.lit, got, c.want)

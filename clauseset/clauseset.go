@@ -3,6 +3,7 @@ package clauseset
 import (
 	"davisputnam/clause"
 	"davisputnam/literal"
+	"errors"
 	"sort"
 	"strings"
 )
@@ -27,7 +28,7 @@ func (c *ClauseSet) Append(a clause.Clause) {
 
 //Reduce transforms S by removing any clauses that contain the literal L1
 //   and removing L2 (i.e. ~L1) from any clauses that contain it
-func (c *ClauseSet) Reduce(l1 literal.Literal) {
+func (c ClauseSet) Reduce(l1 literal.Literal) ClauseSet {
 	l2 := l1.Negation()
 
 	newClauseSet := ClauseSet{}
@@ -45,7 +46,16 @@ func (c *ClauseSet) Reduce(l1 literal.Literal) {
 		newClauseSet.Append(clause)
 
 	}
-	c.clauses = newClauseSet.clauses
+	return newClauseSet
+}
+
+//FirstElement returns the first element in ClauseSet
+func (c ClauseSet) FirstElement() (clause.Clause, error) {
+	if c.Len() > 0 {
+		return c.clauses[0], nil
+	}
+	//return empty clause up
+	return clause.Clause{}, errors.New("No first element in empty ClauseSet")
 }
 
 func (c ClauseSet) String() string {
