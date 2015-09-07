@@ -60,8 +60,22 @@ func (c ClauseSet) FirstElement() (clause.Clause, error) {
 	if c.Len() > 0 {
 		return c.clauses[0], nil
 	}
-	//return empty clause up
+	//return empty clause + error
 	return clause.Clause{}, errors.New("No first element in empty ClauseSet")
+}
+
+//NextLiteral returns the first literal in the ClauseSet that it finds
+func (c ClauseSet) NextLiteral() (literal.Literal, error) {
+	if c.Len() > 0 {
+		for _, cla := range c.clauses {
+			for _, lit := range cla.Clause {
+				return lit.Copy(), nil
+			}
+		}
+	}
+	//return empty literal + literal
+	return literal.Literal{}, errors.New("No literals in ClauseSet")
+
 }
 
 //Equals returns the equality of two ClauseSets
