@@ -7,6 +7,12 @@ import (
 	"testing"
 )
 
+///////////////////////////////////////
+/*
+A -> (N v Q)
+~(N v ~A)
+A -> Q (conclusion)
+*/
 func SatValid(t *testing.T) {
 	a := literal.Literal{"A", false}
 	na := a.Negation()
@@ -42,6 +48,12 @@ func SatValid(t *testing.T) {
 
 }
 
+///////////////////////////////////////
+/*
+A -> B
+~A
+~B (conclusion)
+*/
 func SatInvalid(t *testing.T) {
 	na := literal.Literal{"A", true}
 	b := literal.Literal{"B", false}
