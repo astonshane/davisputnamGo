@@ -13,6 +13,7 @@ type clauseSlice []clause.Clause
 //ClauseSet holds a slice of clauses
 type ClauseSet struct {
 	clauses clauseSlice
+	Indent  int
 }
 
 /*func (c ClauseSet) Copy() ClauseSet {

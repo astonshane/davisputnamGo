@@ -6,6 +6,7 @@ import (
 	"davisputnam/literal"
 	"fmt"
 	"log"
+	"strings"
 )
 
 /*
@@ -22,8 +23,12 @@ def Satisfiable(CS):
 
 //Satisfiable implements above function
 func Satisfiable(CS clauseset.ClauseSet) bool {
+	fmt.Printf("\n%sSatisfiable(%s)\n", strings.Repeat(" ", CS.Indent), CS)
+	CS.Indent += 2
+
 	//if CS = {} : return true
 	if CS.Len() == 0 {
+		fmt.Printf("%sEmpty ClauseSet, returning true\n", strings.Repeat(" ", CS.Indent))
 		return true
 	}
 
@@ -33,6 +38,7 @@ func Satisfiable(CS clauseset.ClauseSet) bool {
 		log.Fatal(err)
 	}
 	if clause.Len(firstElement) == 0 {
+		fmt.Printf("%s{} found in ClauseSet, returning false\n", strings.Repeat(" ", CS.Indent))
 		return false
 	}
 
@@ -41,21 +47,61 @@ func Satisfiable(CS clauseset.ClauseSet) bool {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
+
+	fmt.Printf("%sSpliting on %s\n", strings.Repeat(" ", CS.Indent), nextLiteral)
+
 	CSL := CS.Reduce(nextLiteral)
+	CSL.Indent = CS.Indent
 	CSR := CS.Reduce(nextLiteral.Negation())
+	CSR.Indent = CS.Indent
 
 	return Satisfiable(CSL) || Satisfiable(CSR)
 }
 
+//FindValidity finds the validity of the argument (given as a ClauseSet)
+func FindValidity(CS clauseset.ClauseSet) {
+	fmt.Printf("Starting ClauseSet: %s\n", CS)
+
+	CS.Indent = 0
+	sat := Satisfiable(CS)
+
+	fmt.Print("Conclusion: ")
+	if sat {
+		fmt.Printf("Satisfiable(%s) == %t; INVALID\n", CS, sat)
+	} else {
+		fmt.Printf("Satisfiable(%s) == %t; VALID\n", CS, sat)
+	}
+}
+
 func main() {
-	l := literal.Literal{Name: "A", Negated: false}
-	m := literal.Literal{Name: "C", Negated: true}
+	//from ValidTest:
+	a := literal.Literal{"A", false}
+	na := a.Negation()
+	n := literal.Literal{"N", false}
+	nn := n.Negation()
+	q := literal.Literal{"Q", false}
+	nq := q.Negation()
 
-	c := clause.Clause{}
-	c.Append(l)
-	c.Append(m)
+	one := clause.Clause{}
+	one.Append(a)
 
-	fmt.Println(l)
-	fmt.Println(m)
-	fmt.Println(c)
+	two := clause.Clause{}
+	two.Append(nq)
+
+	three := clause.Clause{}
+	three.Append(nn)
+
+	four := clause.Clause{}
+	four.Append(na)
+	four.Append(n)
+	four.Append(q)
+
+	CS := clauseset.ClauseSet{}
+	CS.Append(one)
+	CS.Append(two)
+	CS.Append(three)
+	CS.Append(four)
+
+	FindValidity(CS)
+
 }

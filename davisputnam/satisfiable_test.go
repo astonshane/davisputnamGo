@@ -72,6 +72,7 @@ func SatInvalid(t *testing.T) {
 	CS.Append(one)
 	CS.Append(two)
 	CS.Append(three)
+	CS.Indent = 0
 
 	sat := Satisfiable(CS)
 	if !sat {
