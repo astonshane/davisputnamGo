@@ -151,3 +151,30 @@ func ConstructTestClauses() (Clause, Clause, Clause, Clause) {
 	return empty, one, two, three
 
 }
+
+//ConstructMoreTestClauses used by the tests
+func ConstructMoreTestClauses() (Clause, Clause, Clause, Clause) {
+	a, b, nb := literal.ConstructTestLiterals()
+	na := a.Negation()
+	c, d, _ := literal.ConstructMoreTestLiterals()
+
+	one := Clause{}
+	one.Append(a)
+
+	two := Clause{}
+	two.Append(a)
+	two.Append(b)
+
+	three := Clause{}
+	three.Append(na)
+	three.Append(b)
+	three.Append(c)
+
+	four := Clause{}
+	four.Append(d)
+	four.Append(b)
+	four.Append(nb)
+
+	return one, two, three, four
+
+}

@@ -50,7 +50,10 @@ func (c ClauseSet) Reduce(l1 literal.Literal) ClauseSet {
 		if j != -1 {
 			clause.RemoveIndex(j)
 		}
-		newClauseSet.Append(clause)
+		//tautological elemination
+		if !clause.Tautology() {
+			newClauseSet.Append(clause)
+		}
 
 	}
 	return newClauseSet

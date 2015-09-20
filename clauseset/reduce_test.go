@@ -8,36 +8,28 @@ import (
 
 func TestReduce(t *testing.T) {
 
-	a, b, nb := literal.ConstructTestLiterals()
+	a, b, _ := literal.ConstructTestLiterals()
+	c := literal.Literal{Name: "C", Negated: false}
+	one, two, three, four := clause.ConstructMoreTestClauses()
+	clauseSet := ClauseSet{}
+	clauseSet.Append(one)
+	clauseSet.Append(two)
+	clauseSet.Append(three)
+	clauseSet.Append(four)
 
 	cases := []struct {
 		lit  literal.Literal
 		want string
 	}{
-		{a, "{{}}"},
-		{b, "{{A}, {~A}}"},
-		{a.Negation(), "{{}, {B}, {~B}}"},
-		{nb, "{{A}, {~A}}"},
+		{a, "{{B, C}}"},
+		{b, "{{A}}"},
+		{a.Negation(), "{{}, {B}}"},
+		{c, "{{A}, {A, B}}"},
 	}
 
 	for _, c := range cases {
-		_, one, two, _ := clause.ConstructTestClauses()
-
-		nOne := clause.Clause{}
-		nOne.Append(a.Negation())
-
-		nTwo := clause.Clause{}
-		nTwo.Append(a)
-		nTwo.Append(nb)
-
-		cs := ClauseSet{}
-		cs.Append(one)
-		cs.Append(nOne)
-		cs.Append(two)
-		cs.Append(nTwo)
-
+		cs := clauseSet.Copy()
 		before := cs.String() //{{A}, {~A}, {A, B}, {A, ~B}}
-
 		new := cs.Reduce(c.lit)
 		post := cs.String()
 		got := new.String()

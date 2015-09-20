@@ -50,3 +50,11 @@ func ConstructTestLiterals() (Literal, Literal, Literal) {
 	nb := Literal{Name: "B", Negated: true}
 	return a, b, nb
 }
+
+//ConstructMoreTestLiterals used by tests
+func ConstructMoreTestLiterals() (Literal, Literal, Literal) {
+	c := Literal{Name: "C", Negated: false}
+	d := Literal{Name: "D", Negated: false}
+	e := Literal{Name: "E", Negated: false}
+	return c, d, e
+}
