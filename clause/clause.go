@@ -60,6 +60,16 @@ func (c *Clause) Contains(literal literal.Literal) int {
 	return -1
 }
 
+//Tautology returns True if the clause is a Tautology (ie. Contains A, ~A), false else
+func (c *Clause) Tautology() bool {
+	for _, literal := range c.Clause {
+		if c.Contains(literal.Negation()) != -1 {
+			return true
+		}
+	}
+	return false
+}
+
 //Equals compares the equality of two clauses
 func Equals(a, b Clause) bool {
 	if len(a.Clause) != len(b.Clause) {

@@ -40,7 +40,7 @@ func Satisfiable(CS clauseset.ClauseSet) bool {
 	if clause.Len(firstElement) == 0 {
 		fmt.Printf("%s{} found in ClauseSet, returning false\n", strings.Repeat(" ", CS.Indent))
 		return false
-	}
+	}	
 
 	//select L in lit(CS): return Satisfiable(CS_L) || Satisfiable(CS_L')
 	nextLiteral, err2 := CS.NextLiteral()
