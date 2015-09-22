@@ -60,6 +60,20 @@ func (c *Clause) Contains(literal literal.Literal) int {
 	return -1
 }
 
+//Subsumes returns True if c subsumes C2
+//	[A,B] subsumes [A,B,C]; all elements in the smaller one are in the bigger one
+func (c *Clause) Subsumes(c2 Clause) bool {
+	if len(c.Clause) >= len(c2.Clause) {
+		return false //c can't subsume C2 if they are the same size or c is bigger
+	}
+	for _, l := range c.Clause {
+		if c2.Contains(l) == -1 {
+			return false
+		}
+	}
+	return true
+}
+
 //Tautology returns True if the clause is a Tautology (ie. Contains A, ~A), false else
 func (c *Clause) Tautology() bool {
 	for _, literal := range c.Clause {
