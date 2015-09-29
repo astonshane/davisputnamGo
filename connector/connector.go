@@ -1,4 +1,4 @@
-package main
+package connector
 
 import (
 	"fmt"
@@ -34,23 +34,26 @@ func Parse(plaintext string) Connector {
 		return Connector{Type: "Neg", Children: []Connector{Connector{Type: "Literal", Literal: plaintext}}}
 	}
 
-	connectors := make(map[string]string)
-	connectors["^"] = "And"
-	connectors["v"] = "Or"
-	connectors["<->"] = "Equiv"
-	connectors["->"] = "Imp"
+	connectors := []struct {
+		short string
+		full  string
+	}{
+		{"^", "And"},
+		{"v", "Or"},
+		{"<->", "Equiv"},
+		{"->", "Imp"},
+	}
 
 	//simple cases: no parens...
 	if !strings.Contains(plaintext, "(") {
-
-		for key, op := range connectors {
-			if strings.Contains(plaintext, key) {
-				splitPlain := strings.Split(plaintext, key)
+		for _, connector := range connectors {
+			if strings.Contains(plaintext, connector.short) {
+				splitPlain := strings.Split(plaintext, connector.short)
 				children := []Connector{}
 				for _, child := range splitPlain {
 					children = append(children, Parse(child))
 				}
-				return Connector{Type: op, Children: children}
+				return Connector{Type: connector.full, Children: children}
 			}
 		}
 	}
@@ -59,7 +62,7 @@ func Parse(plaintext string) Connector {
 }
 
 func main() {
-	cases := []string{"A", "B", "~A", "A^B", "~A^B", "AvB", "Av~B", "A->B", "A<->B"}
+	cases := []string{"~A<->~B"}
 	for _, c := range cases {
 		fmt.Println(Parse(c))
 	}
