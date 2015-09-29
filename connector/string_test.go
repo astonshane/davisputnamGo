@@ -9,6 +9,8 @@ func TestString(t *testing.T) {
 	b := Connector{Type: "Literal", Literal: "B"}
 	nb := Connector{Type: "Neg", Children: []Connector{b}}
 
+	aANDb := Connector{Type: "And", Children: []Connector{a, b}}
+
 	cases := []struct {
 		con  Connector
 		want string
@@ -31,6 +33,7 @@ func TestString(t *testing.T) {
 		{Connector{Type: "Equiv", Children: []Connector{a, b}}, "{Equiv: [{Literal: A} {Literal: B}]}"},
 		{Connector{Type: "Equiv", Children: []Connector{a, nb}}, "{Equiv: [{Literal: A} {Neg: {Literal: B}}]}"},
 		{Connector{Type: "Equiv", Children: []Connector{na, nb}}, "{Equiv: [{Neg: {Literal: A}} {Neg: {Literal: B}}]}"},
+		{Connector{Type: "And", Children: []Connector{a, aANDb}}, "{And: [{Literal: A} {And: [{Literal: A} {Literal: B}]}]}"},
 	}
 	for _, c := range cases {
 		got := c.con.String()
