@@ -2,6 +2,7 @@ package clauseset
 
 import (
 	"davisputnam/clause"
+	"davisputnam/connector"
 	"davisputnam/literal"
 	"errors"
 	"sort"
@@ -15,11 +16,6 @@ type ClauseSet struct {
 	clauses clauseSlice
 	Indent  int
 }
-
-/*func (c ClauseSet) Copy() ClauseSet {
-	new_clasuseset := c.clauses
-	return new_clasuseset
-}*/
 
 //Append adds a clause to the ClauseSet
 func (c *ClauseSet) Append(a clause.Clause) {
@@ -149,4 +145,47 @@ func (c clauseSlice) Less(i, j int) bool {
 
 	return false
 
+}
+
+//ConstructLiteral takes a connector and returns a Literal
+//assuemes the connector is a literal or neg
+func ConstructLiteral(conn connector.Connector) literal.Literal {
+	if conn.Type == "Literal" {
+		return literal.Literal{Name: conn.Literal, Negated: false}
+	}
+	conn = conn.Children[0]
+	return literal.Literal{Name: conn.Literal, Negated: true}
+}
+
+//ConstructClause takes a connector and returns a Clause
+//assumes the connector is in CNF form
+func ConstructClause(conn connector.Connector) clause.Clause {
+	newClause := clause.Clause{}
+
+	if conn.Type == "Literal" || conn.Type == "Neg" {
+		newLiteral := ConstructLiteral(conn)
+		newClause.Append(newLiteral)
+	} else {
+		for _, child := range conn.Children {
+			newLiteral := ConstructLiteral(child)
+			newClause.Append(newLiteral)
+		}
+	}
+	return newClause
+}
+
+//ConstructCS constructs a ClauseSet from a given Connector Object
+//assumes that the Connector is in CNF form
+func ConstructCS(conn connector.Connector) ClauseSet {
+	newCS := ClauseSet{}
+	if conn.Type == "And" {
+		for _, child := range conn.Children {
+			newClause := ConstructClause(child)
+			newCS.Append(newClause)
+		}
+	} else {
+		newClause := ConstructClause(conn)
+		newCS.Append(newClause)
+	}
+	return newCS
 }
