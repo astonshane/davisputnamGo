@@ -34,5 +34,4 @@ func TestParse(t *testing.T) {
 			t.Errorf("Parse(%q): %q != %q", c.plaintext, got, want)
 		}
 	}
-
 }

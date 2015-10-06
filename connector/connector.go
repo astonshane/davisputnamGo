@@ -22,6 +22,17 @@ func (c Connector) String() string {
 	return fmt.Sprintf("{%s: %s}", c.Type, c.Children)
 }
 
+//isLiteral returns true if the connector is a literal or a negation of a literal
+func (c Connector) isLiteral() bool {
+	if c.Type == "Literal" {
+		return true
+	} else if c.Type == "Neg" {
+		return len(c.Children) == 1 && c.Children[0].Type == "Literal"
+	}
+	return false
+
+}
+
 //Parse parses a plaintext line into a Connector sequence
 func Parse(plaintext string) Connector {
 	plaintext = strings.Replace(plaintext, " ", "", -1)
@@ -59,11 +70,4 @@ func Parse(plaintext string) Connector {
 	}
 
 	return Connector{}
-}
-
-func main() {
-	cases := []string{"~A<->~B"}
-	for _, c := range cases {
-		fmt.Println(Parse(c))
-	}
 }
