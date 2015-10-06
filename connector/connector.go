@@ -33,6 +33,35 @@ func (c Connector) isLiteral() bool {
 
 }
 
+//isOr returns true if the connector is an Or of just literals or negations of literals
+// OR if the connector is just a literal (ie. something ORd with nothing)
+func (c Connector) isSimpleOr() bool {
+	if c.Type == "Or" {
+		//make sure each child is also a literal
+		for _, child := range c.Children {
+			if !child.isLiteral() {
+				return false
+			}
+		}
+		return true
+	}
+	//its not an OR, is it just a literal?
+	return c.isLiteral()
+}
+
+//isCNF returns true if the conector is in CNF form
+func (c Connector) isCNF() bool {
+	if c.Type == "And" {
+		for _, child := range c.Children {
+			if !child.isSimpleOr() {
+				return false
+			}
+		}
+		return true
+	}
+	return c.isSimpleOr()
+}
+
 //Parse parses a plaintext line into a Connector sequence
 func Parse(plaintext string) Connector {
 	plaintext = strings.Replace(plaintext, " ", "", -1)
