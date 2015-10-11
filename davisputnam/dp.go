@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"davisputnam/clause"
 	"davisputnam/clauseset"
-	"davisputnam/literal"
+	"davisputnam/connector"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -73,35 +75,30 @@ func FindValidity(CS clauseset.ClauseSet) {
 	}
 }
 
+//ConstructCS reads in premisies from a file and returns its ClauseSet
+func ConstructCS(file string) clauseset.ClauseSet {
+	newCS := clauseset.ClauseSet{}
+
+	infile, err := os.Open(file)
+	if err != nil {
+		panic(err)
+	}
+	defer infile.Close()
+	scanner := bufio.NewScanner(infile)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		line := scanner.Text()
+		con := connector.Parse(line)
+		cs := clauseset.ConstructCS(con)
+		newCS = clauseset.Combine(newCS, cs)
+	}
+
+	return newCS
+}
+
 func main() {
-	//from ValidTest:
-	a := literal.Literal{"A", false}
-	na := a.Negation()
-	n := literal.Literal{"N", false}
-	nn := n.Negation()
-	q := literal.Literal{"Q", false}
-	nq := q.Negation()
-
-	one := clause.Clause{}
-	one.Append(a)
-
-	two := clause.Clause{}
-	two.Append(nq)
-
-	three := clause.Clause{}
-	three.Append(nn)
-
-	four := clause.Clause{}
-	four.Append(na)
-	four.Append(n)
-	four.Append(q)
-
-	CS := clauseset.ClauseSet{}
-	CS.Append(one)
-	CS.Append(two)
-	CS.Append(three)
-	CS.Append(four)
-
+	CS := ConstructCS("../inputs/test3.txt")
+	fmt.Println(CS)
 	FindValidity(CS)
 
 }
