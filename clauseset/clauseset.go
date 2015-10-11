@@ -189,3 +189,11 @@ func ConstructCS(conn connector.Connector) ClauseSet {
 	}
 	return newCS
 }
+
+//Combine takes two ClauseSets and makes one big one
+func Combine(c1, c2 ClauseSet) ClauseSet {
+	for _, clause := range c2.clauses {
+		c1.Append(clause)
+	}
+	return c1
+}
