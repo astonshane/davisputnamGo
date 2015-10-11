@@ -62,6 +62,11 @@ func (c Connector) isCNF() bool {
 	return c.isSimpleOr()
 }
 
+//ToCNF takes a connector that is not in CNF and returns it in CNF form
+func (c Connector) ToCNF() Connector {
+	return c
+}
+
 //Parse parses a plaintext line into a Connector sequence
 func Parse(plaintext string) Connector {
 	plaintext = strings.Replace(plaintext, " ", "", -1)

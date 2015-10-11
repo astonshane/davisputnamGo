@@ -177,6 +177,9 @@ func ConstructClause(conn connector.Connector) clause.Clause {
 //ConstructCS constructs a ClauseSet from a given Connector Object
 //assumes that the Connector is in CNF form
 func ConstructCS(conn connector.Connector) ClauseSet {
+	//move conn to CNF first /////////////
+	conn = conn.ToCNF()
+
 	newCS := ClauseSet{}
 	if conn.Type == "And" {
 		for _, child := range conn.Children {
