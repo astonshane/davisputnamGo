@@ -68,15 +68,46 @@ func (c Connector) ToCNF() Connector {
 }
 
 //Negate takes a connector and adds a negation to the front
+//handles double negations, demorgans, etc.
 func (c Connector) Negate() Connector {
 	newc := Connector{Type: "Neg"}
 	newc.Children = append(newc.Children, c)
 	return newc
 }
 
-//PropegateNegations takes a Connector and pushes all negations as far in as possible
-func (c Connector) PropegateNegations() Connector {
-	return c
+//PropagateNegations takes a Connector and pushes all negations as far in as possible
+func (c Connector) PropagateNegations() Connector {
+	if c.Type == "Neg" {
+		child := c.Children[0]
+
+		if child.Type == "Neg" { //double negation
+			return child.Children[0]
+		} else if child.Type == "Literal" { //can't go any farther than negating a Literal
+			return c
+		}
+
+		newC := Connector{}
+		if child.Type == "And" {
+			newC.Type = "Or"
+		} else if child.Type == "Or" {
+			newC.Type = "And"
+		}
+
+		newChildren := []Connector{}
+		for _, superchild := range child.Children {
+			newChildren = append(newChildren, superchild.Negate())
+		}
+		newC.Children = newChildren
+
+		return newC.PropagateNegations()
+	}
+
+	newChildren := []Connector{}
+	for _, child := range c.Children {
+		newChildren = append(newChildren, child.PropagateNegations())
+	}
+	return Connector{Type: c.Type, Children: newChildren}
+
 }
 
 //Parse parses a plaintext line into a Connector sequence
