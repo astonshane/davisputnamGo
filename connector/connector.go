@@ -67,6 +67,18 @@ func (c Connector) ToCNF() Connector {
 	return c
 }
 
+//Negate takes a connector and adds a negation to the front
+func (c Connector) Negate() Connector {
+	newc := Connector{Type: "Neg"}
+	newc.Children = append(newc.Children, c)
+	return newc
+}
+
+//PropegateNegations takes a Connector and pushes all negations as far in as possible
+func (c Connector) PropegateNegations() Connector {
+	return c
+}
+
 //Parse parses a plaintext line into a Connector sequence
 func Parse(plaintext string) Connector {
 	plaintext = strings.Replace(plaintext, " ", "", -1)
