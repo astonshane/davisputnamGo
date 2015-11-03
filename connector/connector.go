@@ -95,8 +95,26 @@ func (c Connector) RemoveImp() Connector {
 //RemoveEquiv removes an equivillence from a connector
 //and returns the equivillent connector
 func (c Connector) RemoveEquiv() Connector {
-  newc := Connector{}
+	if c.Type != "Equiv"{
+		return c
+	}
+	//A<->B == (A->B) ^ (B->A)
+	a := c.Children[0]
+	b := c.Children[1]
 
+	new1 := Connector{Type: "Imp"}
+	new1.Children = append(new1.Children, a)
+	new1.Children = append(new1.Children, b)
+	new1 = new1.RemoveImp()
+
+	new2 := Connector{Type: "Imp"}
+	new2.Children = append(new2.Children, b)
+	new2.Children = append(new2.Children, a)
+	new2 = new2.RemoveImp()
+
+	newc := Connector{Type: "And"}
+	newc.Children = append(newc.Children, new1)
+	newc.Children = append(newc.Children, new2)
   return newc
 }
 

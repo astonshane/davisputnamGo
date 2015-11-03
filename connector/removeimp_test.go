@@ -15,7 +15,7 @@ func TestRemoveImp(t *testing.T) {
 	for _, c := range cases {
 		got := Parse(c.plaintext).RemoveImp().String()
 		if got != c.want {
-			t.Errorf("Parse(%q).Negate().PropogateNegations(): %q != %q", c.plaintext, got, c.want)
+			t.Errorf("Parse(%q).RemoveImp(): %q != %q", c.plaintext, got, c.want)
 		}
 	}
 }
