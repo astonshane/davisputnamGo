@@ -75,6 +75,31 @@ func (c Connector) Negate() Connector {
 	return newc
 }
 
+//RemoveImp removes an implication from a connector
+//and returns the equivillent connector
+func (c Connector) RemoveImp() Connector {
+	if c.Type != "Imp"{
+		return c
+	}
+	//A->B == ~AvB
+	a := c.Children[0]
+	na := a.Negate().PropagateNegations()
+	b := c.Children[1]
+	newc := Connector{Type: "Or"}
+	newc.Children = append(newc.Children, na)
+	newc.Children = append(newc.Children, b)
+
+  return newc
+}
+
+//RemoveEquiv removes an equivillence from a connector
+//and returns the equivillent connector
+func (c Connector) RemoveEquiv() Connector {
+  newc := Connector{}
+
+  return newc
+}
+
 //PropagateNegations takes a Connector and pushes all negations as far in as possible
 func (c Connector) PropagateNegations() Connector {
 	if c.Type == "Neg" {
