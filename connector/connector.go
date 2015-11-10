@@ -64,6 +64,8 @@ func (c Connector) isCNF() bool {
 
 //ToCNF takes a connector that is not in CNF and returns it in CNF form
 func (c Connector) ToCNF() Connector {
+  c = c.RemoveImp()
+  c = c.RemoveEquiv()
 	return c
 }
 

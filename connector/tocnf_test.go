@@ -17,15 +17,17 @@ func TestToCNF(t *testing.T) {
 		{"Av~B", "{Or: [{Literal: A} {Neg: {Literal: B}}]}"},
 		{"~Av~B", "{Or: [{Neg: {Literal: A}} {Neg: {Literal: B}}]}"},
 		{"Av~Av~B", "{Or: [{Literal: A} {Neg: {Literal: A}} {Neg: {Literal: B}}]}"},
-		//{"A->B", "{Or: [{Neg: {Literal: A}} {Literal: B}]}"},
-		//{"A->~B", "{Or: [{Neg: {Literal: A}} {Neg: {Literal: B}}]}"},
-		//{"A<->B", "{And: [{Or: [{Neg: {Literal: A}} {Literal: B}]} {Or: [{Literal: A} {Neg: {Literal: B}} ]}]}"},
-		//{"A<->~B", "{And: [{Or: [{Neg: {Literal: A}} {Neg: {Literal: B}}]} {Or: [{Literal: A} {Literal: B}]}]}"},
+		{"A->B", "{Or: [{Neg: {Literal: A}} {Literal: B}]}"},
+		{"A->~B", "{Or: [{Neg: {Literal: A}} {Neg: {Literal: B}}]}"},
+		{"A<->B", "{And: [{Or: [{Neg: {Literal: A}} {Literal: B}]} {Or: [{Neg: {Literal: B}} {Literal: A}]}]}"},
+		{"A<->~B", "{And: [{Or: [{Neg: {Literal: A}} {Neg: {Literal: B}}]} {Or: [{Literal: B} {Literal: A}]}]}"},
 	}
 	for _, c := range cases {
 		got := Parse(c.plaintext).ToCNF().String()
 		if got != c.want {
 			t.Errorf("Parse(%q).isCNF(): %q != %q", c.plaintext, got, c.want)
+			t.Errorf("%q", got)
+			t.Errorf("%q", c.want)
 		}
 	}
 }
