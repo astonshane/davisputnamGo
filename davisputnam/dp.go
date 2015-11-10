@@ -76,6 +76,7 @@ func FindValidity(CS clauseset.ClauseSet) {
 }
 
 //ConstructCS reads in premisies from a file and returns its ClauseSet
+//TODO: negate the last clauseset first
 func ConstructCS(file string) clauseset.ClauseSet {
 	newCS := clauseset.ClauseSet{}
 
