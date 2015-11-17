@@ -76,7 +76,6 @@ func FindValidity(CS clauseset.ClauseSet) {
 }
 
 //ConstructCS reads in premisies from a file and returns its ClauseSet
-//TODO: negate the last clauseset first
 func ConstructCS(file string) clauseset.ClauseSet {
 	newCS := clauseset.ClauseSet{}
 
@@ -87,9 +86,17 @@ func ConstructCS(file string) clauseset.ClauseSet {
 	defer infile.Close()
 	scanner := bufio.NewScanner(infile)
 	scanner.Split(bufio.ScanLines)
-	for scanner.Scan() {
+	scanner.Scan()
+	contin := true
+	for contin {
 		line := scanner.Text()
 		con := connector.Parse(line)
+		con = con.ToCNF()
+		if !scanner.Scan() {
+			con = con.Negate()
+			con = con.PropagateNegations()
+			contin = false
+		}
 		cs := clauseset.ConstructCS(con)
 		newCS = clauseset.Combine(newCS, cs)
 	}
