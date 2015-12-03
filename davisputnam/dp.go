@@ -105,7 +105,11 @@ func ConstructCS(file string) clauseset.ClauseSet {
 }
 
 func main() {
-	CS := ConstructCS("../inputs/test3.txt")
+	if len(os.Args) != 2 {
+		fmt.Println("Useage: go dp.go <input file>")
+		os.Exit(0)
+	}
+	CS := ConstructCS(os.Args[1])
 	fmt.Println(CS)
 	FindValidity(CS)
 
