@@ -1,2 +1,2 @@
 language: go
-go_import_path: github.com/astonshane/davisputnamGo
+go_import_path: davisputnam
