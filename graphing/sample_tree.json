@@ -1,0 +1,22 @@
+{
+    "children": [
+        {
+            "children": [],
+            "name": "{{B}, {~B}}",
+            "split": "A"
+        },
+        {
+            "children": [
+                {
+                    "children": [],
+                    "name": "X",
+                    "split": ""
+                }
+            ],
+            "name": "{{}, {~B}}",
+            "split": "~A"
+        }
+    ],
+    "name": "{{~A, B}, {A}, {~B}}",
+    "split": ""
+}
