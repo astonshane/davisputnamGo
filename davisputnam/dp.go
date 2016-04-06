@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"davisputnam/literal"
 	"davisputnam/clause"
 	"davisputnam/clauseset"
 	//"davisputnam/connector"
@@ -87,10 +88,33 @@ func clean(sentence string) string {
 	return result
 }
 
-func getCNF(sentence string) clause.Clause {
-	c := clause.Clause{}
+func findMatch(cnf string) clauseset.ClauseSet {
+	cs := clauseset.ClauseSet{}
+	clauses := strings.Split(cnf, "AND")
+	for _, c := range clauses{
+		cl := clause.Clause{}
+		c = strings.Trim(strings.TrimSpace(c), "()")
+		lits := strings.Split(c, "OR")
+		for _, lit := range lits{
+			lit = strings.Trim(strings.TrimSpace(lit), "()")
+			if len(lit) == 1{
+				l := literal.Literal{Name: lit, Negated: false}
+				cl.Append(l)
+			}else{
+				l := literal.Literal{Name: strings.Split(lit, " ")[1], Negated: true}
+				cl.Append(l)
+			}
+
+
+		}
+		cs.Append(cl)
+	}
+	return cs
+}
+
+func getCNF(sentence string) clauseset.ClauseSet {
+	cs := clauseset.ClauseSet{}
 	url := fmt.Sprintf("http://api.wolframalpha.com/v1/query?input=BooleanConvert[%s,%%22CNF%%22]&appid=2Y4TEV-W2AETK4T5K", clean(sentence))
-	fmt.Println(url)
 	response, err := http.Get(url)
 	if err != nil {
         fmt.Printf("%s", err)
@@ -102,28 +126,27 @@ func getCNF(sentence string) clause.Clause {
             fmt.Printf("%s", err)
             os.Exit(1)
         }
-        //fmt.Printf("%s\n", string(contents))
 		lines := strings.Split(string(contents), "\n")
 		found_first := false
 
 		for _, line := range lines {
-			//fmt.Printf("%q\n", line)
 			if strings.Contains(line, "<plaintext>") {
 				if !found_first {
 					found_first = true
 				}else{
-					//fmt.Println(line)
-					//r, _ := regexp.Compile(">([A-Z\\(\\)\\s]+)<")
+
 					re := regexp.MustCompile("<plaintext>(.*)</plaintext>")
 					cnf := re.FindStringSubmatch(line)[1]
-					fmt.Printf("cnf: %s\n", cnf)
+
+					newCS := findMatch(cnf)
+					cs = clauseset.Combine(cs, newCS)
 					break
 				}
 			}
 		}
     }
 
-	return c
+	return cs
 }
 
 //ConstructCS reads in premisies from a file and returns its ClauseSet
@@ -146,12 +169,9 @@ func ConstructCS(file string) clauseset.ClauseSet {
 			line = fmt.Sprintf("~(%s)", line)
 			contin = false
 		}
-		fmt.Println(line)
 
-		c := getCNF(line)
-
-
-		newCS.Append(c)
+		cs := getCNF(line)
+		newCS = clauseset.Combine(newCS, cs)
 	}
 
 	return newCS
@@ -164,6 +184,6 @@ func main() {
 	}
 	CS := ConstructCS(os.Args[1])
 	fmt.Println(CS)
-	//FindValidity(CS)
+	FindValidity(CS)
 
 }
