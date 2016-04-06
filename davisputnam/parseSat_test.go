@@ -16,7 +16,7 @@ func TestParseSat(t *testing.T) {
 	}
 	for _, c := range cases {
 		CS := ConstructCS(c.file)
-		got := Satisfiable(CS)
+		got, _ := Satisfiable(CS)
 		if got != c.want {
 			t.Errorf("Satisfiable(%q): %t != %t", CS, got, c.want)
 		}

@@ -41,7 +41,7 @@ func SatValid(t *testing.T) {
 	CS.Append(three)
 	CS.Append(four)
 
-	sat := Satisfiable(CS)
+	sat, _ := Satisfiable(CS)
 	if sat {
 		t.Errorf("ClauseSet %q was Satisfiable, so it is an invalid argument (it should be valid)", CS)
 	}
@@ -74,7 +74,7 @@ func SatInvalid(t *testing.T) {
 	CS.Append(three)
 	CS.Indent = 0
 
-	sat := Satisfiable(CS)
+	sat, _ := Satisfiable(CS)
 	if !sat {
 		t.Errorf("ClauseSet %q was not Satisfiable, so it is a valid argument (it should be invalid)", CS)
 	}

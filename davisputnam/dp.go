@@ -5,7 +5,6 @@ import (
 	"davisputnam/literal"
 	"davisputnam/clause"
 	"davisputnam/clauseset"
-	//"davisputnam/connector"
 	"fmt"
 	"log"
 	"os"
@@ -13,8 +12,15 @@ import (
 	"net/http"
 	"io/ioutil"
 	"regexp"
+	"encoding/json"
 )
 
+
+type Tree struct {
+	Name 		string
+	Split 		string
+	Children	[]Tree
+}
 /*
 def Satisfiable(CS):
     if CS = {}:
@@ -28,14 +34,17 @@ def Satisfiable(CS):
 */
 
 //Satisfiable implements above function
-func Satisfiable(CS clauseset.ClauseSet) bool {
+func Satisfiable(CS clauseset.ClauseSet) (bool, Tree) {
+	tree := Tree{Name: CS.String(), Split: ""}
 	fmt.Printf("\n%sSatisfiable(%s)\n", strings.Repeat(" ", CS.Indent), CS)
 	CS.Indent += 2
 
 	//if CS = {} : return true
 	if CS.Len() == 0 {
 		fmt.Printf("%sEmpty ClauseSet, returning true\n", strings.Repeat(" ", CS.Indent))
-		return true
+		openTree := Tree{Name: "O", Split: ""}
+		tree.Children = append(tree.Children, openTree)
+		return true, tree
 	}
 
 	//if {} in CS : return false
@@ -45,7 +54,9 @@ func Satisfiable(CS clauseset.ClauseSet) bool {
 	}
 	if clause.Len(firstElement) == 0 {
 		fmt.Printf("%s{} found in ClauseSet, returning false\n", strings.Repeat(" ", CS.Indent))
-		return false
+		closedTree := Tree{Name: "X", Split: ""}
+		tree.Children = append(tree.Children, closedTree)
+		return false, tree
 	}
 
 	//select L in lit(CS): return Satisfiable(CS_L) || Satisfiable(CS_L')
@@ -61,7 +72,15 @@ func Satisfiable(CS clauseset.ClauseSet) bool {
 	CSR := CS.Reduce(nextLiteral.Negation())
 	CSR.Indent = CS.Indent
 
-	return Satisfiable(CSL) || Satisfiable(CSR)
+	left, tree_l := Satisfiable(CSL)
+	right, tree_r := Satisfiable(CSR)
+
+	tree_l.Split = nextLiteral.String()
+	tree_r.Split = nextLiteral.Negation().String()
+
+	tree.Children = append(tree.Children, tree_l)
+	tree.Children = append(tree.Children, tree_r)
+	return left || right, tree
 }
 
 //FindValidity finds the validity of the argument (given as a ClauseSet)
@@ -69,7 +88,11 @@ func FindValidity(CS clauseset.ClauseSet) {
 	fmt.Printf("Starting ClauseSet: %s\n", CS)
 
 	CS.Indent = 0
-	sat := Satisfiable(CS)
+	sat, tree := Satisfiable(CS)
+	treeJson, _ := json.Marshal(tree)
+
+	f, _ := os.Create("../graphing/test_tree.json")
+	f.WriteString(string(treeJson))
 
 	fmt.Print("Conclusion: ")
 	if sat {
@@ -169,6 +192,7 @@ func ConstructCS(file string) clauseset.ClauseSet {
 			line = fmt.Sprintf("~(%s)", line)
 			contin = false
 		}
+		fmt.Println(line)
 
 		cs := getCNF(line)
 		newCS = clauseset.Combine(newCS, cs)

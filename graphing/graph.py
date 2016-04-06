@@ -5,10 +5,11 @@ from ete3 import Tree, TreeStyle, TextFace
 
 def parseTree(root):
     tree = Tree()
-    tree.name = root['name']
-    tree.add_face(TextFace(root['split']), column=0, position="branch-bottom")
-    for child in root['children']:
-        tree.children.append(parseTree(child))
+    tree.name = root['Name']
+    tree.add_face(TextFace(root['Split']), column=0, position="branch-bottom")
+    if root['Children']:
+        for child in root['Children']:
+            tree.children.append(parseTree(child))
     return tree
 
 
@@ -20,7 +21,7 @@ with open('sample_tree.json', 'w') as outfile:
 ts = TreeStyle()
 ts.show_leaf_name = False
 
-root = json.loads(open('sample_tree.json').read())
+root = json.loads(open('test_tree.json').read())
 
 pprint(root)
 tree_root = parseTree(root)
