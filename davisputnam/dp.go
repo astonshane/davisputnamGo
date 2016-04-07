@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"regexp"
 	"encoding/json"
+	"os/exec"
 )
 
 
@@ -84,14 +85,14 @@ func Satisfiable(CS clauseset.ClauseSet) (bool, Tree) {
 }
 
 //FindValidity finds the validity of the argument (given as a ClauseSet)
-func FindValidity(CS clauseset.ClauseSet) {
+func FindValidity(CS clauseset.ClauseSet, filename string) {
 	fmt.Printf("Starting ClauseSet: %s\n", CS)
 
 	CS.Indent = 0
 	sat, tree := Satisfiable(CS)
 	treeJson, _ := json.Marshal(tree)
 
-	f, _ := os.Create("../graphing/test_tree.json")
+	f, _ := os.Create(filename)
 	f.WriteString(string(treeJson))
 
 	fmt.Print("Conclusion: ")
@@ -208,6 +209,15 @@ func main() {
 	}
 	CS := ConstructCS(os.Args[1])
 	fmt.Println(CS)
-	FindValidity(CS)
+	filename := os.Args[1][:len(os.Args[1])-4]
+
+	FindValidity(CS, filename+".json")
+
+	cmd := "python"
+	args := []string{"graph.py", filename+".json"}
+	if err := exec.Command(cmd, args...).Run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 }
