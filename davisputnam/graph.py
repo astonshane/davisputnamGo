@@ -2,6 +2,8 @@ import json
 import sys
 from pprint import pprint
 from ete3 import Tree, TreeStyle, TextFace
+from PIL import Image, ImageDraw
+
 
 
 def parseTree(root):
@@ -36,4 +38,11 @@ if __name__ == '__main__':
     # render the file and save it
     fname = sys.argv[1][:-4] + "png"
     tree_root.render(fname, tree_style=ts, w=5000)
+
+    im = Image.open(fname)
+    (x, y) = im.size
+
+    draw = ImageDraw.Draw(im)
+    draw.rectangle((0, y*.45, x*.25, y), fill="white")
+    im.save(fname, "PNG")
     # tree_root.show(tree_style=ts)
