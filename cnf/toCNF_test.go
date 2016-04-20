@@ -10,10 +10,10 @@ func TestToCNF(t *testing.T) {
 		statement string
 		want int
 	}{
-		{"(AvB)vC", 8},
+		{"A<->B", 8},
 	}
 
 	for _, c := range cases {
-		toCNF(c.statement)
+		ToCNF(c.statement)
 	}
 }

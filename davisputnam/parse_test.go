@@ -11,8 +11,10 @@ func TestConstructs(t *testing.T) {
 		{"../inputs/test1.txt", "{{A}, {~A}}"},
 		{"../inputs/test2.txt", "{{A}, {B}}"},
 		{"../inputs/test3.txt", "{{A}, {B}, {~A, B}}"},
-		{"../inputs/test4.txt", "{{A}, {~B}}"},
+		{"../inputs/test4.txt", "{{A, B}, {A, ~B}, {~A, ~B}}"},
 		{"../inputs/test5.txt", "{{A}, {~B}, {~A, B}}"},
+		{"../inputs/test6.txt", "{{A}, {~B}, {~C}, {A, B}, {A, ~B}, {~A, B}, {~A, ~B}}"},
+		{"../inputs/test7.txt", "{{A}, {~A, B, C}, {~A, B, ~C}, {~A, ~B, C}}"},
 	}
 	for _, c := range cases {
 		got := ConstructCS(c.file).String()

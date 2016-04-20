@@ -52,14 +52,12 @@ func getRows(literals []string) [][]string {
     return cases
 }
 
-func toCNF(statement string) {
+func ToCNF(statement string) clauseset.ClauseSet{
 
     rows := getRows(getLiterals(statement))
-    fmt.Println(statement)
     new_clauseset := clauseset.ClauseSet{}
     for _, row := range rows {
         sort.Sort(ByLength(row))
-        //fmt.Println(row)
 
         statement_cpy := statement[:1]+statement[1:]
         for _, l := range row {
@@ -101,6 +99,12 @@ func toCNF(statement string) {
             r = regexp.MustCompile("\\(FALSE\\)")
             statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
 
+            r = regexp.MustCompile("(~TRUE|~\\(TRUE\\))")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
+
+            r = regexp.MustCompile("(~FALSE|~\\(FALSE\\))")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
+
             r = regexp.MustCompile("TRUEv(TRUE|FALSE)")
             statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
 
@@ -109,12 +113,41 @@ func toCNF(statement string) {
 
             r = regexp.MustCompile("FALSEvFALSE")
             statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
+
+            r = regexp.MustCompile("TRUE\\^TRUE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
+
+            r = regexp.MustCompile("(TRUE|FALSE)\\^FALSE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
+
+            r = regexp.MustCompile("FALSE\\^(TRUE|FALSE)")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
+
+
+            r = regexp.MustCompile("FALSE->(TRUE|FALSE)")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
+
+            r = regexp.MustCompile("TRUE\\->FALSE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
+
+            r = regexp.MustCompile("TRUE\\->TRUE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
+
+            r = regexp.MustCompile("TRUE<\\->TRUE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
+
+            r = regexp.MustCompile("FALSE<\\->FALSE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "TRUE")
+
+            r = regexp.MustCompile("TRUE<\\->FALSE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
+
+            r = regexp.MustCompile("FALSE<\\->TRUE")
+            statement_cpy = r.ReplaceAllString(statement_cpy, "FALSE")
         }
 
-        //fmt.Printf("new statement: %s\n\n", statement_cpy)
 
         if statement_cpy == "FALSE" {
-            fmt.Println(row)
             new_clause := clause.Clause{}
             for _, l := range row {
                 if len(l) == 1 {
@@ -126,11 +159,9 @@ func toCNF(statement string) {
                 }
 
             }
-            fmt.Println(new_clause)
             new_clauseset.Append(new_clause)
         }
 
     }
-    fmt.Println("the clauseset:")
-    fmt.Println(new_clauseset)
+    return new_clauseset
 }
