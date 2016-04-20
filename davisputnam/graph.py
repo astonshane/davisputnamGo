@@ -5,7 +5,6 @@ from ete3 import Tree, TreeStyle, TextFace
 from PIL import Image, ImageDraw
 
 
-
 def parseTree(root):
     tree = Tree()
     tree.name = root['Name']
