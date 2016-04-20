@@ -2,6 +2,7 @@ package cnf
 
 import (
     "regexp"
+    "fmt"
 )
 
 func getLiterals(str string) []string{
@@ -15,4 +16,22 @@ func getLiterals(str string) []string{
     }
 
     return literals
+}
+
+func getRows(literals []string) [][]string {
+    cases := [][]string{}
+    if len(literals) == 0 {
+        return append(cases, []string{})
+    }
+    new_literal := literals[0]
+    literals = literals[1:]
+
+    new_cases := getRows(literals)
+    for _, c := range new_cases {
+        c1 := append(c, new_literal)
+        c2 := append(c, fmt.Sprintf("~(%s)", new_literal))
+        cases = append(cases, c1, c2)
+    }
+
+    return cases
 }

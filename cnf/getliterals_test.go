@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestTautology(t *testing.T) {
+func TestGetLiterals(t *testing.T) {
 
 	cases := []struct {
 		statement string
