@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 def parseTree(root):
     tree = Tree()
     tree.name = root['Name']
-    tree.add_face(TextFace(root['Split']), column=0, position="branch-bottom")
+    tree.add_face(TextFace(root['Split'], fgcolor="red"), column=0, position="branch-bottom")
     if root['Children']:
         for child in root['Children']:
             tree.children.append(parseTree(child))
